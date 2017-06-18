@@ -49,21 +49,22 @@ func run() int {
 	}
 	scanner := bufio.NewScanner(japanese.ShiftJIS.NewDecoder().Reader(f))
 	for scanner.Scan() {
-		text := scanner.Text()
+		first := scanner.Text()
 		if ignorecase {
-			text = strings.ToUpper(text)
+			first = strings.ToUpper(first)
 		}
-		if text == word {
-			if !scanner.Scan() {
-				break
-			}
-			text = scanner.Text()
+		if !scanner.Scan() {
+			break
+		}
+		second := scanner.Text()
+
+		if first == word {
 			if !all {
-				if words := re.Split(text, -1); len(words) > 0 {
-					text = words[0]
+				if words := re.Split(second, -1); len(words) > 0 {
+					second = words[0]
 				}
 			}
-			fmt.Println(text)
+			fmt.Println(second)
 			return 0
 		}
 	}
