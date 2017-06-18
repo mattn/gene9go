@@ -18,15 +18,11 @@ var (
 )
 
 func dictpath() string {
-	dir := os.Getenv("HOME")
-	if dir == "" && runtime.GOOS == "windows" {
-		dir = os.Getenv("APPDATA")
-		if dir == "" {
-			dir = filepath.Join(os.Getenv("USERPROFILE"), "Application Data", "gene9go")
-		}
-		dir = filepath.Join(dir, "gene9go")
+	dir := ""
+	if runtime.GOOS == "windows" {
+		dir = filepath.Join(os.Getenv("APPDATA"), "gene9go")
 	} else {
-		dir = filepath.Join(dir, ".config", "gene9go")
+		dir = filepath.Join(os.Getenv("HOME"), ".config", "gene9go")
 	}
 	return filepath.Join(dir, "gene.txt")
 }
