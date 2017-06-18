@@ -14,7 +14,8 @@ import (
 )
 
 var (
-	re = regexp.MustCompile(`[;,]`)
+	resplit = regexp.MustCompile(`[;,]`)
+	renorm  = regexp.MustCompile(`^[0-9]+\.`)
 )
 
 func dictpath() string {
@@ -28,11 +29,11 @@ func dictpath() string {
 }
 
 func run() int {
-	var all bool
+	var only bool
 	var ignorecase bool
 	var file string
 	flag.StringVar(&file, "f", dictpath(), "path to gene95.txt")
-	flag.BoolVar(&all, "a", false, "output all result")
+	flag.BoolVar(&only, "o", true, "show first candidate")
 	flag.BoolVar(&ignorecase, "i", false, "ignore case")
 	flag.Parse()
 
@@ -59,10 +60,11 @@ func run() int {
 		second := scanner.Text()
 
 		if first == word {
-			if !all {
-				if words := re.Split(second, -1); len(words) > 0 {
+			if only {
+				if words := resplit.Split(second, -1); len(words) > 0 {
 					second = words[0]
 				}
+				second = renorm.ReplaceAllString(second, "")
 			}
 			fmt.Println(second)
 			return 0
