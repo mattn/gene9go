@@ -15,6 +15,8 @@ $ gene9go useful
 $ go get github.com/mattn/gene9go
 ```
 
+You should get gene.txt from http://www.namazu.org/~tsuchiya/sdic/data/gene.html
+
 ## License
 
 MIT
