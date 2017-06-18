@@ -6,10 +6,15 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"runtime"
 	"strings"
 
 	"golang.org/x/text/encoding/japanese"
+)
+
+var (
+	re = regexp.MustCompile(`[;,]`)
 )
 
 func dictpath() string {
@@ -28,9 +33,11 @@ func dictpath() string {
 
 func run() int {
 	var all bool
+	var ignorecase bool
 	var file string
 	flag.StringVar(&file, "f", dictpath(), "path to gene95.txt")
 	flag.BoolVar(&all, "a", false, "output all result")
+	flag.BoolVar(&ignorecase, "i", false, "ignore case")
 	flag.Parse()
 
 	f, err := os.Open(file)
@@ -41,15 +48,22 @@ func run() int {
 	defer f.Close()
 
 	word := strings.Join(flag.Args(), " ")
+	if ignorecase {
+		word = strings.ToUpper(word)
+	}
 	scanner := bufio.NewScanner(japanese.ShiftJIS.NewDecoder().Reader(f))
 	for scanner.Scan() {
-		if scanner.Text() == word {
+		text := scanner.Text()
+		if ignorecase {
+			text = strings.ToUpper(text)
+		}
+		if text == word {
 			if !scanner.Scan() {
 				break
 			}
-			text := scanner.Text()
+			text = scanner.Text()
 			if !all {
-				if words := strings.Split(text, ","); len(words) > 0 {
+				if words := re.Split(text, -1); len(words) > 0 {
 					text = words[0]
 				}
 			}
