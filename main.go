@@ -33,7 +33,7 @@ func run() int {
 	var ignorecase bool
 	var file string
 	flag.StringVar(&file, "f", dictpath(), "path to gene95.txt")
-	flag.BoolVar(&only, "o", true, "show first candidate")
+	flag.BoolVar(&only, "o", false, "show first candidate")
 	flag.BoolVar(&ignorecase, "i", false, "ignore case")
 	flag.Parse()
 
